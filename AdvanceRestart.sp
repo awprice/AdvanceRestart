@@ -51,21 +51,8 @@ public Action:PrintMsg(Handle:timer)
 	}
 
 	new maxplayers = GetMaxClients();
-	EmitSoundToAll(filelocation);
 
 	if (currenttime == targettime) {
-
-		if (GetConVarInt(g_hEnabledHint) >= 1) {
-		    PrintHintTextToAll("Have A Nice Day :]");
-		}
-
-		if (GetConVarInt(g_hEnabledChat) >= 1) {
-		    PrintToChatAll("Have A Nice Day :]");
-		}
-
-		if (GetConVarInt(g_hEnabledCenter) >= 1) {
-		    PrintCenterTextAll("Have A Nice Day :]");
-		}
 
 		// force client to retry from superadmin by pRED*
 		for(new i = 1; i <= maxplayers; i++) {
@@ -81,14 +68,14 @@ public Action:PrintMsg(Handle:timer)
 	} else {
 
 		if (GetConVarInt(g_hEnabledHint) >= 1) {
-		    PrintHintTextToAll("Server Restart: %d",(targettime-currenttime));
+		    PrintHintTextToAll("Restart in %d, !sm_stoprestart to cancel", (targettime-currenttime));
 		}
 
 		if (GetConVarInt(g_hEnabledChat) >= 1) {
-		    PrintToChatAll("Server Restart: %d",(targettime-currenttime));
+		    PrintToChatAll("Restart in %d, !sm_stoprestart to cancel", (targettime-currenttime));
 		}
 		if (GetConVarInt(g_hEnabledCenter) >= 1) {
-		    PrintCenterTextAll("%d",(targettime-currenttime));
+		    PrintCenterTextAll("%d", (targettime-currenttime));
 		}
 	}
 
@@ -99,6 +86,7 @@ public Action:PrintMsg(Handle:timer)
 
 public Action:Command_stopRestart(client, args) {
 	STOP = 1;
+	PrintToChatAll("Server restart stopped.");
 	return Plugin_Handled;
 }
 
@@ -116,16 +104,18 @@ public Action:Command_Restart(client, args) {
 		return Plugin_Handled;
 	} else {
 
+	    EmitSoundToAll(filelocation);
+
 		if (GetConVarInt(g_hEnabledHint) >= 1) {
-		    PrintHintTextToAll("Server Restart!");
+		    PrintHintTextToAll(" - Server is restarting in %d seconds - ", (secs));
 		}
 
 		if (GetConVarInt(g_hEnabledChat) >= 1) {
-		    PrintToChatAll("Server Restart!");
+		    PrintToChatAll(" - Server is restarting in %d seconds - ", (secs));
 		}
 
 		if (GetConVarInt(g_hEnabledCenter) >= 1) {
-		    PrintCenterTextAll("Server Restart!");
+            PrintHintTextToAll(" - Server is restarting in %d seconds - ", (secs));
 		}
 
 		targettime = secs;
